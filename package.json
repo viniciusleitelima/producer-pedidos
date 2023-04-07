@@ -1,6 +1,6 @@
 {
     "name": "lambda-sqs",
-    "description": "Lambda-SQS starter application",
+    "description": "Lambda para produzir mensagem no topico",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
