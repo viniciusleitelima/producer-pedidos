@@ -5,7 +5,7 @@
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  Lambda-SQS starter application
+  Lambda para produzir mensagem no topico
 
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
@@ -32,27 +32,15 @@ Resources:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
   # This is a Lambda function config associated with the source code: sqs-payload-logger.js
-  sqsPayloadLoggerFunction:
+  producerFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./
-      Handler: src/handlers/sqs-payload-logger.sqsPayloadLoggerHandler
+      Handler: src/handlers/index.main
       Runtime: nodejs14.x
       Description: A Lambda function that logs the payload of messages sent to an associated SQS queue.
       MemorySize: 128
       Timeout: 25 # Chosen to be less than the default SQS Visibility Timeout of 30 seconds
       Policies:
         # Give Lambda basic execution Permission to the sqsPayloadLogger
-        - AWSLambdaBasicExecutionRole
-      Events:
-        SimpleQueueEvent:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt SimpleQueue.Arn
-  # This is an SQS queue with server-side encryption enabled, and default configuration properties
-  # otherwise. To learn more about the available options, see
-  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sqs-queues.html
-  SimpleQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      KmsMasterKeyId: alias/aws/sqs
+        - AWSLambdaBasicExecutionRole      
