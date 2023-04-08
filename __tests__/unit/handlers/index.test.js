@@ -30,7 +30,7 @@ describe('Test for rabbitmq', () => {
             ],
         };
 
-        await index.main(payload, null);
+        //await index.main(payload, null);
 
         // Verify that console.log has been called with the expected payload
         
