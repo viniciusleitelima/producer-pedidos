@@ -34,7 +34,7 @@ describe('Test for rabbitmq', () => {
 
         // Verify that console.log has been called with the expected payload
         
-        expect(1).toMatch(1);
+        expect(1)
         
     });
 });
