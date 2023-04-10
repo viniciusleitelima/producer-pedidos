@@ -7,12 +7,12 @@ let fs = require('fs');
 exports.main = async (event, context) => {
   
 var opts = {
-  cert: fs.readFileSync('../Certificate.pem'),
-  key: fs.readFileSync('../7e643d70e00b236c63c5926699f9c57c7ec86b48.key'),
+  cert: fs.readFileSync('/var/task/src/handlers/certificados/cacert.pem'),
+  key: fs.readFileSync('/var/task/src/handlers/certificados/chave.key'),
   // cert and key or
   // pfx: fs.readFileSync('../etc/client/keycert.p12'),
-  //passphrase: 'MySecretPassword',
-  ca: [fs.readFileSync('../viniciusleite.desenvolvedor@gmail.com.crt')]
+  passphrase: 'Kell1@1723',
+  ca: [fs.readFileSync('/var/task/src/handlers/certificados/cacert.pem')]
 };
 
 // Options for just confidentiality. This requires RabbitMQ's SSL
