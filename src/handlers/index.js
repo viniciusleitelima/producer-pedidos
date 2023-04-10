@@ -1,32 +1,47 @@
-
+const amqp = require('amqplib');
+let fs = require('fs');
 /**
  * A Lambda function that logs the payload received from SQS.
  */
 
 exports.main = async (event, context) => {
-  const amqp = require('amqp')
+  
+var opts = {
+  cert: fs.readFileSync('../Certificate.pem'),
+  key: fs.readFileSync('../7e643d70e00b236c63c5926699f9c57c7ec86b48.key'),
+  // cert and key or
+  // pfx: fs.readFileSync('../etc/client/keycert.p12'),
+  //passphrase: 'MySecretPassword',
+  ca: [fs.readFileSync('../viniciusleite.desenvolvedor@gmail.com.crt')]
+};
 
-  const conn = amqp.createConnection({
-    host: 'b-796ab016-9539-4244-9dd2-6133e2fe7866.mq.us-east-1.amazonaws.com',
-    port: 5671,
-    login: 'user_dev',
-    password: 'Kell1#172395',
-    connectionTimeout: 10000
-  })
+// Options for just confidentiality. This requires RabbitMQ's SSL
+// configuration to include the items
+//
+//     {verify, verify_none},
+//     {fail_if_no_peer_cert,false}
+//
+// var opts = {  ca: [fs.readFileSync('../etc/testca/cacert.pem')] };
 
-  conn.on('ready', () => {
-    let count = 1
-    let message = `TEST ${count}`
-    conn.publish('pedidos_queue', message)
-    console.log(`SENT ${count} - ${message}`)
+// Option to use the SSL client certificate for authentication
+// opts.credentials = amqp.credentials.external();
 
-  })
+var open = amqp.connect('amqps://b-796ab016-9539-4244-9dd2-6133e2fe7866.mq.us-east-1.amazonaws.com:5671', opts);
+
+open.then(function(conn) {
+  process.on('SIGINT', conn.close.bind(conn));
+  return conn.createChannel().then(function(ch) {
+    ch.sendToQueue('foo', Buffer.from('Hello World!'));
+  });
+}).then(null, console.warn);
+
 
 
 
   // try {
-  //   const connection = await amqp.connect('amqps://user_dev:Kell1#172395@b-796ab016-9539-4244-9dd2-6133e2fe7866.mq.us-east-1.amazonaws.com:5671');
+  //   const connection = await amqp.connect('amqps://b-796ab016-9539-4244-9dd2-6133e2fe7866.mq.us-east-1.amazonaws.com:5672');
   //   const channel = await connection.createChannel();
+  //   console.log("conexao criada");
 
 
   //   const mensagem = {
