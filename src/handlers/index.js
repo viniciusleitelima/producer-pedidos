@@ -31,7 +31,7 @@ var open = amqp.connect('amqps://b-796ab016-9539-4244-9dd2-6133e2fe7866.mq.us-ea
 open.then(function(conn) {
   process.on('SIGINT', conn.close.bind(conn));
   return conn.createChannel().then(function(ch) {
-    ch.sendToQueue('foo', Buffer.from('Hello World!'));
+    ch.sendToQueue('pedidos_queue', Buffer.from('Hello World!'));
   });
 }).then(null, console.warn);
 
